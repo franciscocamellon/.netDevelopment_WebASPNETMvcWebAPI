@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Model.Interfaces.
 
-namespace Domain.Service.Services
+namespace Crosscutting.IoC
 {
-    public class DeveloperService : IDeveloperService
+    public class Bootstrapper
     {
     }
 }
