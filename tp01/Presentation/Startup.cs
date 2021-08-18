@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Crosscutting.IoC;
 using Microsoft.EntityFrameworkCore;
-using Presentation.Data;
 
 namespace Presentation
 {
@@ -27,8 +27,7 @@ namespace Presentation
         {
             services.AddControllersWithViews();
 
-            services.AddDbContext<MobileAppDbContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("MobileAppDbContext")));
+            services.RegisterServices(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
