@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Crosscutting.IoC\Crosscutting.IoC.csproj" />
-    <ProjectReference Include="..\..\Domain.Model\Domain.Model.csproj" />
+    <ProjectReference Include="..\Crosscutting.IoC\Crosscutting.IoC.csproj" />
+    <ProjectReference Include="..\Domain.Model\Domain.Model.csproj" />
   </ItemGroup>
 
 </Project>
