@@ -6,7 +6,7 @@ using Data.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Domain.Model.Model;
+using Domain.Model.Models;
 
 namespace Presentation.Controllers
 {
@@ -33,8 +33,11 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var developerModel = await _context.Developers
+            var developerModel = await _context
+                .Developers
+                .Include(x => x.MobileApps)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (developerModel == null)
             {
                 return NotFound();

@@ -1,4 +1,5 @@
-﻿@model DeveloperModel
+﻿@using System.Linq
+@model DeveloperModel
 
 @{
     ViewData["Title"] = "Details";
@@ -41,6 +42,56 @@
             @Html.DisplayFor(model => model.PublishedApps)
         </dd>
     </dl>
+    
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MobileApps.First().AppName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MobileApps.First().PublishedStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MobileApps.First().PublishedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MobileApps.First().ModificationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MobileApps.First().Developer)
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.MobileApps) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AppName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PublishedStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PublishedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModificationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Developer.Id)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

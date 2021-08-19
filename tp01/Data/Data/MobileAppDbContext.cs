@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Domain.Model.Model;
+using Domain.Model.Models;
 
 namespace Data.Data
 {
@@ -14,6 +14,7 @@ namespace Data.Data
         {
         }
 
-        public DbSet<Domain.Model.Model.DeveloperModel> Developers { get; set; }
+        public DbSet<Domain.Model.Models.DeveloperModel> Developers { get; set; }
+        public DbSet<Domain.Model.Models.MobileAppModel> MobileApps { get; set; }
     }
 }
