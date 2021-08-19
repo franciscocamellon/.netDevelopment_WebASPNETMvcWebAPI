@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Model.Model
+namespace Domain.Model.Models
 {
     public class DeveloperModel
     {
@@ -14,5 +14,7 @@ namespace Domain.Model.Model
         public DateTime GraduationDate { get; set; }
         public bool EmployedStatus { get; set; }
         public int PublishedApps { get; set; }
+
+        public List<MobileAppModel> MobileApps { get; set; }
     }
 }
