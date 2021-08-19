@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Data.Data;
+using Domain.Model.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain.Model.Models;
 
@@ -12,17 +10,18 @@ namespace Presentation.Controllers
 {
     public class DeveloperController : Controller
     {
-        private readonly MobileAppDbContext _context;
+        private readonly IDeveloperService _developerService;
 
-        public DeveloperController(MobileAppDbContext context)
+        public DeveloperController(
+            IDeveloperService developerService)
         {
-            _context = context;
+            _developerService = developerService;
         }
 
         // GET: Developer
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Developers.ToListAsync());
+            return View(await _developerService.GetAllAsync(true));
         }
 
         // GET: Developer/Details/5
@@ -33,10 +32,7 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var developerModel = await _context
-                .Developers
-                .Include(x => x.MobileApps)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var developerModel = await _developerService.GetByIdAsync(id.Value);
 
             if (developerModel == null)
             {
@@ -57,16 +53,18 @@ namespace Presentation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,GraduationDate,EmployedStatus,PublishedApps")] DeveloperModel developerModel)
+        public async Task<IActionResult> Create(DeveloperModel developerModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                developerModel.Id = Guid.NewGuid();
-                _context.Add(developerModel);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(developerModel);
             }
-            return View(developerModel);
+
+            await _developerService.CreateAsync(developerModel);
+
+            var developerCreated = await _developerService.CreateAsync(developerModel);
+
+            return RedirectToAction(nameof(Details), new {id = developerCreated.Id});
         }
 
         // GET: Developer/Edit/5
@@ -77,7 +75,8 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var developerModel = await _context.Developers.FindAsync(id);
+            var developerModel = await _developerService.GetByIdAsync(id.Value);
+
             if (developerModel == null)
             {
                 return NotFound();
@@ -90,7 +89,7 @@ namespace Presentation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,FirstName,LastName,GraduationDate,EmployedStatus,PublishedApps")] DeveloperModel developerModel)
+        public async Task<IActionResult> Edit(Guid id, DeveloperModel developerModel)
         {
             if (id != developerModel.Id)
             {
@@ -101,12 +100,13 @@ namespace Presentation.Controllers
             {
                 try
                 {
-                    _context.Update(developerModel);
-                    await _context.SaveChangesAsync();
+                    await _developerService.EditAsync(developerModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DeveloperModelExists(developerModel.Id))
+                    var exists = await DeveloperModelExistsAsync(developerModel.Id);
+
+                    if (!exists)
                     {
                         return NotFound();
                     }
@@ -128,8 +128,8 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var developerModel = await _context.Developers
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var developerModel = await _developerService.GetByIdAsync(id.Value);
+
             if (developerModel == null)
             {
                 return NotFound();
@@ -143,15 +143,18 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var developerModel = await _context.Developers.FindAsync(id);
-            _context.Developers.Remove(developerModel);
-            await _context.SaveChangesAsync();
+            await _developerService.DeleteAsync(id);
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DeveloperModelExists(Guid id)
+        private async Task<bool> DeveloperModelExistsAsync(Guid id)
         {
-            return _context.Developers.Any(e => e.Id == id);
+            var developer = await _developerService.GetByIdAsync(id);
+
+            var any = developer != null;
+
+            return any;
         }
     }
 }
