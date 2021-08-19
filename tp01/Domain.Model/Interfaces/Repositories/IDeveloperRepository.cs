@@ -18,3 +18,4 @@ namespace Domain.Model.Interfaces.Repositories
         Task DeleteAsync(int id);
     }
 }
+// coment de commit
