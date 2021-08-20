@@ -7,14 +7,14 @@ using Domain.Model.Models;
 
 namespace Domain.Model.Interfaces.Repositories
 {
-    public interface IDeveloperRepository
+    public interface IMobileAppRepository
     {
-        Task<IEnumerable<DeveloperModel>> GetAllAsync(
+        Task<IEnumerable<MobileAppModel>> GetAllAsync(
             bool orderAscendant,
             string search = null);
-        Task<DeveloperModel> GetByIdAsync(Guid id);
-        Task<DeveloperModel> CreateAsync(DeveloperModel developerModel);
-        Task<DeveloperModel> EditAsync(DeveloperModel developerModel);
+        Task<MobileAppModel> GetByIdAsync(Guid id);
+        Task<MobileAppModel> CreateAsync(MobileAppModel mobileAppModel);
+        Task<MobileAppModel> EditAsync(MobileAppModel mobileAppModel);
         Task DeleteAsync(Guid id);
     }
 }

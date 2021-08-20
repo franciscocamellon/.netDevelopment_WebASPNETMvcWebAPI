@@ -31,7 +31,7 @@ namespace Data.Migrations
                     AppName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PublishedStatus = table.Column<bool>(type: "bit", nullable: false),
                     PublishedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeveloperId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>

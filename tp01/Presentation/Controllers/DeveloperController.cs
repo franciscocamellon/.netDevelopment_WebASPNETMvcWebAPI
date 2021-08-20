@@ -60,8 +60,6 @@ namespace Presentation.Controllers
                 return View(developerModel);
             }
 
-            await _developerService.CreateAsync(developerModel);
-
             var developerCreated = await _developerService.CreateAsync(developerModel);
 
             return RedirectToAction(nameof(Details), new {id = developerCreated.Id});
