@@ -8,6 +8,7 @@ using Domain.Model.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Presentation.Models;
 
 namespace Presentation.Controllers
 {
@@ -26,9 +27,18 @@ namespace Presentation.Controllers
         }
 
         // GET: Developer
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(MobileAppIndexViewModel mobileAppIndexRequest)
         {
-            return View(await _mobileAppService.GetAllAsync(true));
+            var mobileAppIndexViewModel = new MobileAppIndexViewModel
+            {
+                Search = mobileAppIndexRequest.Search,
+                OrderAscendant = mobileAppIndexRequest.OrderAscendant,
+                MobileApps = await _mobileAppService.GetAllAsync(
+                    mobileAppIndexRequest.OrderAscendant,
+                    mobileAppIndexRequest.Search)
+            };
+           
+            return View(mobileAppIndexViewModel);
         }
 
         // GET: Developer/Details/5
@@ -172,7 +182,7 @@ namespace Presentation.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
+ 
         private async Task<bool> MobileAppModelExistsAsync(Guid id)
         {
             var developer = await _mobileAppService.GetByIdAsync(id);

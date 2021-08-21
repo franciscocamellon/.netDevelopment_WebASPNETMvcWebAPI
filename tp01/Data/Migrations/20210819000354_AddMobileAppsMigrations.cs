@@ -28,7 +28,7 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AppName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AppName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PublishedStatus = table.Column<bool>(type: "bit", nullable: false),
                     PublishedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),

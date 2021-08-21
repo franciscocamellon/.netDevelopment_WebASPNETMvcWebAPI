@@ -5,6 +5,7 @@ using Domain.Model.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Domain.Model.Models;
+using Presentation.Models;
 
 namespace Presentation.Controllers
 {
@@ -19,9 +20,17 @@ namespace Presentation.Controllers
         }
 
         // GET: Developer
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DeveloperIndexViewModel developerIndexRequest)
         {
-            return View(await _developerService.GetAllAsync(true));
+            var developerIndexViewModel = new DeveloperIndexViewModel
+            {
+                Search = developerIndexRequest.Search,
+                OrderAscendant = developerIndexRequest.OrderAscendant,
+                Developers = await _developerService.GetAllAsync(
+                    developerIndexRequest.OrderAscendant,
+                    developerIndexRequest.Search)
+            };
+            return View(developerIndexViewModel);
         }
 
         // GET: Developer/Details/5
@@ -94,28 +103,29 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    await _developerService.EditAsync(developerModel);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    var exists = await DeveloperModelExistsAsync(developerModel.Id);
-
-                    if (!exists)
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(developerModel);
             }
-            return View(developerModel);
+
+            try
+            {
+                await _developerService.EditAsync(developerModel);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                var exists = await DeveloperModelExistsAsync(developerModel.Id);
+
+                if (!exists)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Developer/Delete/5
