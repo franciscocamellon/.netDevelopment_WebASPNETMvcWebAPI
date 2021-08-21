@@ -38,7 +38,7 @@ namespace Domain.Service.Services
             return await _developerRepository.EditAsync(developerModel);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             await _developerRepository.DeleteAsync(id);
         }

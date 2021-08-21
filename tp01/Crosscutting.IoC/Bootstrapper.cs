@@ -24,6 +24,8 @@ namespace Crosscutting.IoC
 
             services.AddTransient<IDeveloperService, DeveloperService>();
             services.AddTransient<IDeveloperRepository, DeveloperRepository>();
+            services.AddTransient<IMobileAppService, MobileAppService>();
+            services.AddTransient<IMobileAppRepository, MobileAppRepository>();
         }
     }
 }

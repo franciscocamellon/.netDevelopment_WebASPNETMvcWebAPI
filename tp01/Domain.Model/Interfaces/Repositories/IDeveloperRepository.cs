@@ -15,6 +15,6 @@ namespace Domain.Model.Interfaces.Repositories
         Task<DeveloperModel> GetByIdAsync(Guid id);
         Task<DeveloperModel> CreateAsync(DeveloperModel developerModel);
         Task<DeveloperModel> EditAsync(DeveloperModel developerModel);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(Guid id);
     }
 }

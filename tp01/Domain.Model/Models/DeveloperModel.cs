@@ -13,7 +13,7 @@ namespace Domain.Model.Models
         public string LastName { get; set; }
         public DateTime GraduationDate { get; set; }
         public bool EmployedStatus { get; set; }
-        public int PublishedApps { get; set; }
+        public int? PublishedApps { get; set; }
 
         public List<MobileAppModel> MobileApps { get; set; }
     }

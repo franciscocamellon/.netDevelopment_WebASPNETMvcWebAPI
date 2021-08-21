@@ -1,8 +1,7 @@
-﻿@using System.Linq
-@model DeveloperIndexViewModel
-
+﻿@model MobileAppIndexViewModel
 @{
     ViewData["Title"] = "Index";
+    
 }
 
 <h1>Search</h1>
@@ -24,7 +23,7 @@
 </p>
 
 @{
-    if (Model.Developers == null || !Model.Developers.Any())
+    if (Model.MobileApps == null || !Model.MobileApps.Any())
     {
         <p>Nenhum Autor cadastrado :(</p>
         return;
@@ -35,41 +34,41 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Developers.First().FirstName)
+                @Html.DisplayNameFor(model => model.MobileApps.First().AppName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Developers.First().LastName)
+                @Html.DisplayNameFor(model => model.MobileApps.First().PublishedStatus)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Developers.First().GraduationDate)
+                @Html.DisplayNameFor(model => model.MobileApps.First().PublishedDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Developers.First().EmployedStatus)
+                @Html.DisplayNameFor(model => model.MobileApps.First().ModificationDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Developers.First().PublishedApps)
+                @Html.DisplayNameFor(model => model.MobileApps.First().Developer.FirstName)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Developers)
+        @foreach (var item in Model.MobileApps)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
+                    @Html.DisplayFor(modelItem => item.AppName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
+                    @Html.DisplayFor(modelItem => item.PublishedStatus)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.GraduationDate)
+                    @Html.DisplayFor(modelItem => item.PublishedDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EmployedStatus)
+                    @Html.DisplayFor(modelItem => item.ModificationDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PublishedApps)
+                    @Html.DisplayFor(modelItem => item.Developer.FirstName)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
