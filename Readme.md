@@ -3,8 +3,8 @@
 ---
 
 <p align="center">
-<h2 align="center">DevNetwork</h2>
-<h4 align="center">Uma rede social para desenvolvedores de aplicativos mobile.</h4>
+<h1 align="center">DESENVOLVIMENTO .NET</h1>
+<h2 align="center">Desenvolvimento de Aplicações Web ASP .NET MVC</h2>
 
 <!-- ![GitHub Repo stars](https://img.shields.io/github/stars/franciscocamellon/.netDevelopment_BlockProject?style=social)
 ![GitHub repo size](https://img.shields.io/github/repo-size/franciscocamellon/.netDevelopment_BlockProject)
