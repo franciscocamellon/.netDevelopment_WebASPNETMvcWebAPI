@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(MobileAppDbContext))]
-    [Migration("20210819000354_AddMobileAppsMigrations")]
+    [Migration("20210821142310_AddMobileAppsMigrations")]
     partial class AddMobileAppsMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,7 @@ namespace Data.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PublishedApps")
+                    b.Property<int?>("PublishedApps")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -59,7 +59,7 @@ namespace Data.Migrations
                     b.Property<Guid>("DeveloperId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ModificationDate")
+                    b.Property<DateTime?>("ModificationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("PublishedDate")

@@ -16,7 +16,7 @@ namespace Data.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GraduationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EmployedStatus = table.Column<bool>(type: "bit", nullable: false),
-                    PublishedApps = table.Column<int>(type: "int", nullable: false)
+                    PublishedApps = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,7 +28,7 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AppName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PublishedStatus = table.Column<bool>(type: "bit", nullable: false),
                     PublishedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),

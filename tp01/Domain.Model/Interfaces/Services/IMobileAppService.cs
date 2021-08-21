@@ -16,5 +16,6 @@ namespace Domain.Model.Interfaces.Services
         Task<MobileAppModel> CreateAsync(MobileAppModel mobileAppModel);
         Task<MobileAppModel> EditAsync(MobileAppModel mobileAppModel);
         Task DeleteAsync(Guid id);
+        Task<bool> IsUnusedNameAsync(string appName, Guid id);
     }
 }

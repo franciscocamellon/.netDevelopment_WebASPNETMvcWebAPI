@@ -48,7 +48,9 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            return View(developerModel);
+            var developerViewModel = DeveloperViewModel.From(developerModel);
+
+            return View(developerViewModel);
         }
 
         // GET: Developer/Create
@@ -62,13 +64,14 @@ namespace Presentation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(DeveloperModel developerModel)
+        public async Task<IActionResult> Create(DeveloperViewModel developerViewModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(developerModel);
+                return View(developerViewModel);
             }
 
+            var developerModel = developerViewModel.ToModel();
             var developerCreated = await _developerService.CreateAsync(developerModel);
 
             return RedirectToAction(nameof(Details), new {id = developerCreated.Id});
@@ -88,7 +91,10 @@ namespace Presentation.Controllers
             {
                 return NotFound();
             }
-            return View(developerModel);
+
+            var developerViewModel = DeveloperViewModel.From(developerModel);
+
+            return View(developerViewModel);
         }
 
         // POST: Developer/Edit/5
@@ -96,18 +102,19 @@ namespace Presentation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, DeveloperModel developerModel)
+        public async Task<IActionResult> Edit(Guid id, DeveloperViewModel developerViewModel)
         {
-            if (id != developerModel.Id)
+            if (id != developerViewModel.Id)
             {
                 return NotFound();
             }
 
             if (!ModelState.IsValid)
             {
-                return View(developerModel);
+                return View(developerViewModel);
             }
 
+            var developerModel = developerViewModel.ToModel();
             try
             {
                 await _developerService.EditAsync(developerModel);
@@ -143,7 +150,9 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            return View(developerModel);
+            var developerViewModel = DeveloperViewModel.From(developerModel);
+
+            return View(developerViewModel);
         }
 
         // POST: Developer/Delete/5

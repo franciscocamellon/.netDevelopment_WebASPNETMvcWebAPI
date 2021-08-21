@@ -16,5 +16,6 @@ namespace Domain.Model.Interfaces.Repositories
         Task<MobileAppModel> CreateAsync(MobileAppModel mobileAppModel);
         Task<MobileAppModel> EditAsync(MobileAppModel mobileAppModel);
         Task DeleteAsync(Guid id);
+        Task<MobileAppModel> GetNameNotFromThisIdAsync(string appName, Guid id);
     }
 }

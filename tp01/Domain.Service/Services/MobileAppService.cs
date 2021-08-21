@@ -11,36 +11,43 @@ namespace Domain.Service.Services
 {
     public class MobileAppService : IMobileAppService
     {
-        private readonly IMobileAppRepository _developerRepository;
+        private readonly IMobileAppRepository _mobileAppRepository;
 
         public MobileAppService(
-            IMobileAppRepository developerRepository)
+            IMobileAppRepository mobileAppRepository)
         {
-            _developerRepository = developerRepository;
+            _mobileAppRepository = mobileAppRepository;
         }
         public async Task<IEnumerable<MobileAppModel>> GetAllAsync(bool orderAscendant, string search = null)
         {
-            return await _developerRepository.GetAllAsync(orderAscendant, search);
+            return await _mobileAppRepository.GetAllAsync(orderAscendant, search);
         }
 
         public async Task<MobileAppModel> GetByIdAsync(Guid id)
         {
-            return await _developerRepository.GetByIdAsync(id);
+            return await _mobileAppRepository.GetByIdAsync(id);
         }
 
         public async Task<MobileAppModel> CreateAsync(MobileAppModel mobileAppModel)
         {
-            return await _developerRepository.CreateAsync(mobileAppModel);
+            return await _mobileAppRepository.CreateAsync(mobileAppModel);
         }
 
         public async Task<MobileAppModel> EditAsync(MobileAppModel mobileAppModel)
         {
-            return await _developerRepository.EditAsync(mobileAppModel);
+            return await _mobileAppRepository.EditAsync(mobileAppModel);
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            await _developerRepository.DeleteAsync(id);
+            await _mobileAppRepository.DeleteAsync(id);
+        }
+
+        public async Task<bool> IsUnusedNameAsync(string appName, Guid id)
+        {
+            var mobileAppModel = await _mobileAppRepository.GetNameNotFromThisIdAsync(appName, id);
+
+            return mobileAppModel == null;
         }
     }
 }

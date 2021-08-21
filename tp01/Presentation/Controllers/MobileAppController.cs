@@ -56,7 +56,9 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            return View(mobileAppModel);
+            var mobileAppViewModel = MobileAppViewModel.From(mobileAppModel);
+
+            return View(mobileAppViewModel);
         }
 
         // GET: Developer/Create
@@ -72,14 +74,16 @@ namespace Presentation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MobileAppModel mobileAppModel)
+        public async Task<IActionResult> Create(MobileAppViewModel mobileAppViewModel)
         {
             if (!ModelState.IsValid)
             {
-                await FillWithSelectedDevelopers(mobileAppModel.DeveloperId);
+                await FillWithSelectedDevelopers(mobileAppViewModel.DeveloperId);
 
-                return View(mobileAppModel);
+                return View(mobileAppViewModel);
             }
+
+            var mobileAppModel = mobileAppViewModel.ToModel();
 
             var mobileAppCreated = await _mobileAppService.CreateAsync(mobileAppModel);
 
@@ -114,7 +118,9 @@ namespace Presentation.Controllers
 
             await FillWithSelectedDevelopers(mobileAppModel.DeveloperId);
 
-            return View(mobileAppModel);
+            var mobileAppViewModel = MobileAppViewModel.From(mobileAppModel);
+
+            return View(mobileAppViewModel);
         }
 
         // POST: Developer/Edit/5
@@ -122,19 +128,21 @@ namespace Presentation.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, MobileAppModel mobileAppModel)
+        public async Task<IActionResult> Edit(Guid id, MobileAppViewModel mobileAppViewModel)
         {
-            if (id != mobileAppModel.Id)
+            if (id != mobileAppViewModel.Id)
             {
                 return NotFound();
             }
 
             if (!ModelState.IsValid)
             {
-                await FillWithSelectedDevelopers(mobileAppModel.DeveloperId);
+                await FillWithSelectedDevelopers(mobileAppViewModel.DeveloperId);
 
-                return View(mobileAppModel);
+                return View(mobileAppViewModel);
             }
+
+            var mobileAppModel = mobileAppViewModel.ToModel();
             try
             {
                 await _mobileAppService.EditAsync(mobileAppModel);
@@ -170,7 +178,8 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            return View(mobileAppModel);
+            var mobileAppViewModel = MobileAppViewModel.From(mobileAppModel);
+            return View(mobileAppViewModel);
         }
 
         // POST: Developer/Delete/5
@@ -190,6 +199,14 @@ namespace Presentation.Controllers
             var any = developer != null;
 
             return any;
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        public async Task<IActionResult> IsUnusedName(string appName, Guid id)
+        {
+            return await _mobileAppService.IsUnusedNameAsync(appName, id) 
+                ? Json(true) 
+                : Json($"O nome {appName} já está sendo usado.");
         }
     }
 }

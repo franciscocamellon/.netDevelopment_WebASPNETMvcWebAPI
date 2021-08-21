@@ -71,5 +71,14 @@ namespace Data.Repositories
 
             await _mobileAppDbContext.SaveChangesAsync();
         }
+
+        public async Task<MobileAppModel> GetNameNotFromThisIdAsync(string appName, Guid id)
+        {
+            var mobileAppModel = await _mobileAppDbContext
+                .MobileApps
+                .FirstOrDefaultAsync(x => x.AppName == appName && x.Id != id);
+
+            return mobileAppModel;
+        }
     }
 }

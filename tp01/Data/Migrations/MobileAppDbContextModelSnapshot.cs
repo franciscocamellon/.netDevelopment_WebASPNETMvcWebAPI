@@ -37,7 +37,7 @@ namespace Data.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PublishedApps")
+                    b.Property<int?>("PublishedApps")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -57,7 +57,7 @@ namespace Data.Migrations
                     b.Property<Guid>("DeveloperId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ModificationDate")
+                    b.Property<DateTime?>("ModificationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("PublishedDate")
