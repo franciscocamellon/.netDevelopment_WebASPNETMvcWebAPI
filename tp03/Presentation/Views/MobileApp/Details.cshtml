@@ -1,0 +1,50 @@
+﻿@model MobileAppViewModel
+
+@{
+    ViewData["Title"] = "Details";
+
+    var developerFullName = $"{Model.Developer.FirstName} {Model.Developer.LastName}";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>MobileAppModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AppName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AppName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PublishedStatus)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PublishedStatus)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PublishedDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PublishedDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ModificationDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ModificationDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Developer)
+        </dt>
+        <dd class = "col-sm-10">
+            @developerFullName
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
