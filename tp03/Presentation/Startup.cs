@@ -8,8 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Crosscutting.IoC;
+//using Crosscutting.IoC;
 using Microsoft.EntityFrameworkCore;
+using Presentation.Services;
+using Presentation.Services.Implementations;
 
 namespace Presentation
 {
@@ -35,7 +37,9 @@ namespace Presentation
                     options.ClientSecret = googleAuthNSection["ClientSecret"];
                 });
 
-            services.RegisterServices(Configuration);
+            //services.RegisterServices(Configuration);
+            services.AddTransient<IDeveloperHttpService, DeveloperFakeService>();
+            services.AddTransient<IMobileAppHttpService, MobileAppFakeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

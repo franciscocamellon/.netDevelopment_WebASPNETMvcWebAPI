@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Model.Models;
 
 namespace Presentation.Models
 {
@@ -29,38 +25,5 @@ namespace Presentation.Models
         public int? PublishedApps { get; set; }
 
         public List<MobileAppViewModel> MobileApps { get; set; }
-
-        public static DeveloperViewModel From(DeveloperModel developerModel)
-        {
-            var developerViewModel = new DeveloperViewModel
-            {
-                Id = developerModel.Id,
-                FirstName = developerModel.FirstName,
-                LastName = developerModel.LastName,
-                GraduationDate = developerModel.GraduationDate,
-                EmployedStatus = developerModel.EmployedStatus,
-                PublishedApps = developerModel.PublishedApps,
-
-                MobileApps = developerModel?.MobileApps.Select(x => MobileAppViewModel.From(x, false)).ToList(),
-            };
-            return developerViewModel;
-        }
-
-        public DeveloperModel ToModel()
-        {
-            var developerModel = new DeveloperModel
-            {
-                Id = Id,
-                FirstName = FirstName,
-                LastName = LastName,
-                GraduationDate = GraduationDate,
-                EmployedStatus = EmployedStatus,
-                PublishedApps = PublishedApps,
-
-                MobileApps = MobileApps?.Select(x => x.ToModel(false)).ToList(),
-            };
-
-            return developerModel;
-        }
     }
 }

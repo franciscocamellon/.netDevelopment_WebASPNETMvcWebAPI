@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Model.Models;
+﻿using System.Collections.Generic;
 
 namespace Presentation.Models
 {
@@ -11,6 +6,6 @@ namespace Presentation.Models
     {
         public  string Search { get; set; }
         public bool OrderAscendant { get; set; }
-        public IEnumerable<MobileAppModel> MobileApps { get; set; }
+        public IEnumerable<MobileAppViewModel> MobileApps { get; set; }
     }
 }

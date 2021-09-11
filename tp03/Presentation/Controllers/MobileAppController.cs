@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Domain.Model.Interfaces.Services;
-using Domain.Model.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Presentation.Models;
+using Presentation.Services;
 
 namespace Presentation.Controllers
 {
     public class MobileAppController : Controller
     {
-        private readonly IMobileAppService _mobileAppService;
-        private readonly IDeveloperService _developerService;
+        private readonly IMobileAppHttpService _mobileAppHttpService;
+        private readonly IDeveloperHttpService _developerHttpService;
 
         public MobileAppController(
-            IMobileAppService mobileAppService,
-            IDeveloperService developerService)
+            IMobileAppHttpService mobileAppHttpService,
+            IDeveloperHttpService developerHttpService)
         {
-            _mobileAppService = mobileAppService;
-            _developerService = developerService;
+            _mobileAppHttpService = mobileAppHttpService;
+            _developerHttpService = developerHttpService;
 
         }
 
@@ -33,7 +29,7 @@ namespace Presentation.Controllers
             {
                 Search = mobileAppIndexRequest.Search,
                 OrderAscendant = mobileAppIndexRequest.OrderAscendant,
-                MobileApps = await _mobileAppService.GetAllAsync(
+                MobileApps = await _mobileAppHttpService.GetAllAsync(
                     mobileAppIndexRequest.OrderAscendant,
                     mobileAppIndexRequest.Search)
             };
@@ -49,14 +45,12 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var mobileAppModel = await _mobileAppService.GetByIdAsync(id.Value);
+            var mobileAppViewModel = await _mobileAppHttpService.GetByIdAsync(id.Value);
 
-            if (mobileAppModel == null)
+            if (mobileAppViewModel == null)
             {
                 return NotFound();
             }
-
-            var mobileAppViewModel = MobileAppViewModel.From(mobileAppModel);
 
             return View(mobileAppViewModel);
         }
@@ -83,21 +77,19 @@ namespace Presentation.Controllers
                 return View(mobileAppViewModel);
             }
 
-            var mobileAppModel = mobileAppViewModel.ToModel();
-
-            var mobileAppCreated = await _mobileAppService.CreateAsync(mobileAppModel);
+            var mobileAppCreated = await _mobileAppHttpService.CreateAsync(mobileAppViewModel);
 
             return RedirectToAction(nameof(Details), new { id = mobileAppCreated.Id });
         }
 
         private async Task FillWithSelectedDevelopers(Guid? developerId = null)
         {
-            var developers = await _developerService.GetAllAsync(true);
+            var developers = await _developerHttpService.GetAllAsync(true);
 
             ViewBag.Developers = new SelectList(
                 developers,
-                nameof(DeveloperModel.Id),
-                nameof(DeveloperModel.FirstName),
+                nameof(DeveloperViewModel.Id),
+                nameof(DeveloperViewModel.FirstName),
                 developerId);
         }
 
@@ -109,16 +101,14 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var mobileAppModel = await _mobileAppService.GetByIdAsync(id.Value);
+            var mobileAppViewModel = await _mobileAppHttpService.GetByIdAsync(id.Value);
 
-            if (mobileAppModel == null)
+            if (mobileAppViewModel == null)
             {
                 return NotFound();
             }
 
-            await FillWithSelectedDevelopers(mobileAppModel.DeveloperId);
-
-            var mobileAppViewModel = MobileAppViewModel.From(mobileAppModel);
+            await FillWithSelectedDevelopers(mobileAppViewModel.DeveloperId);
 
             return View(mobileAppViewModel);
         }
@@ -141,15 +131,13 @@ namespace Presentation.Controllers
 
                 return View(mobileAppViewModel);
             }
-
-            var mobileAppModel = mobileAppViewModel.ToModel();
             try
             {
-                await _mobileAppService.EditAsync(mobileAppModel);
+                await _mobileAppHttpService.EditAsync(mobileAppViewModel);
             }
             catch (DbUpdateConcurrencyException)
             {
-                var exists = await MobileAppModelExistsAsync(mobileAppModel.Id);
+                var exists = await MobileAppViewModelExistsAsync(mobileAppViewModel.Id);
 
                 if (!exists)
                 {
@@ -171,14 +159,12 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var mobileAppModel = await _mobileAppService.GetByIdAsync(id.Value);
+            var mobileAppViewModel = await _mobileAppHttpService.GetByIdAsync(id.Value);
 
-            if (mobileAppModel == null)
+            if (mobileAppViewModel == null)
             {
                 return NotFound();
             }
-
-            var mobileAppViewModel = MobileAppViewModel.From(mobileAppModel);
             return View(mobileAppViewModel);
         }
 
@@ -187,14 +173,14 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _mobileAppService.DeleteAsync(id);
+            await _mobileAppHttpService.DeleteAsync(id);
 
             return RedirectToAction(nameof(Index));
         }
  
-        private async Task<bool> MobileAppModelExistsAsync(Guid id)
+        private async Task<bool> MobileAppViewModelExistsAsync(Guid id)
         {
-            var developer = await _mobileAppService.GetByIdAsync(id);
+            var developer = await _mobileAppHttpService.GetByIdAsync(id);
 
             var any = developer != null;
 
@@ -204,7 +190,7 @@ namespace Presentation.Controllers
         [AcceptVerbs("GET", "POST")]
         public async Task<IActionResult> IsUnusedName(string appName, Guid id)
         {
-            return await _mobileAppService.IsUnusedNameAsync(appName, id) 
+            return await _mobileAppHttpService.IsUnusedNameAsync(appName, id) 
                 ? Json(true) 
                 : Json($"O nome {appName} já está sendo usado.");
         }

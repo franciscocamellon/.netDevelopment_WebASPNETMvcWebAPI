@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Data.Data;
-using Domain.Model.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Domain.Model.Models;
 using Presentation.Models;
+using Presentation.Services;
 
 namespace Presentation.Controllers
 {
     public class DeveloperController : Controller
     {
-        private readonly IDeveloperService _developerService;
+        private readonly IDeveloperHttpService _developerHttpService;
 
         public DeveloperController(
-            IDeveloperService developerService)
+            IDeveloperHttpService developerHttpService)
         {
-            _developerService = developerService;
+            _developerHttpService = developerHttpService;
         }
 
         // GET: Developer
@@ -26,7 +24,7 @@ namespace Presentation.Controllers
             {
                 Search = developerIndexRequest.Search,
                 OrderAscendant = developerIndexRequest.OrderAscendant,
-                Developers = await _developerService.GetAllAsync(
+                Developers = await _developerHttpService.GetAllAsync(
                     developerIndexRequest.OrderAscendant,
                     developerIndexRequest.Search)
             };
@@ -41,14 +39,12 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var developerModel = await _developerService.GetByIdAsync(id.Value);
+            var developerViewModel = await _developerHttpService.GetByIdAsync(id.Value);
 
-            if (developerModel == null)
+            if (developerViewModel == null)
             {
                 return NotFound();
             }
-
-            var developerViewModel = DeveloperViewModel.From(developerModel);
 
             return View(developerViewModel);
         }
@@ -70,9 +66,8 @@ namespace Presentation.Controllers
             {
                 return View(developerViewModel);
             }
-
-            var developerModel = developerViewModel.ToModel();
-            var developerCreated = await _developerService.CreateAsync(developerModel);
+            
+            var developerCreated = await _developerHttpService.CreateAsync(developerViewModel);
 
             return RedirectToAction(nameof(Details), new {id = developerCreated.Id});
         }
@@ -85,14 +80,12 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var developerModel = await _developerService.GetByIdAsync(id.Value);
+            var developerViewModel = await _developerHttpService.GetByIdAsync(id.Value);
 
-            if (developerModel == null)
+            if (developerViewModel == null)
             {
                 return NotFound();
             }
-
-            var developerViewModel = DeveloperViewModel.From(developerModel);
 
             return View(developerViewModel);
         }
@@ -113,15 +106,14 @@ namespace Presentation.Controllers
             {
                 return View(developerViewModel);
             }
-
-            var developerModel = developerViewModel.ToModel();
+            
             try
             {
-                await _developerService.EditAsync(developerModel);
+                await _developerHttpService.EditAsync(developerViewModel);
             }
             catch (DbUpdateConcurrencyException)
             {
-                var exists = await DeveloperModelExistsAsync(developerModel.Id);
+                var exists = await developerViewModelExistsAsync(developerViewModel.Id);
 
                 if (!exists)
                 {
@@ -143,14 +135,12 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            var developerModel = await _developerService.GetByIdAsync(id.Value);
+            var developerViewModel = await _developerHttpService.GetByIdAsync(id.Value);
 
-            if (developerModel == null)
+            if (developerViewModel == null)
             {
                 return NotFound();
             }
-
-            var developerViewModel = DeveloperViewModel.From(developerModel);
 
             return View(developerViewModel);
         }
@@ -160,14 +150,14 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _developerService.DeleteAsync(id);
+            await _developerHttpService.DeleteAsync(id);
 
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> DeveloperModelExistsAsync(Guid id)
+        private async Task<bool> developerViewModelExistsAsync(Guid id)
         {
-            var developer = await _developerService.GetByIdAsync(id);
+            var developer = await _developerHttpService.GetByIdAsync(id);
 
             var any = developer != null;
 
