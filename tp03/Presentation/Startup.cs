@@ -1,15 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-//using Crosscutting.IoC;
-using Microsoft.EntityFrameworkCore;
 using Presentation.Services;
 using Presentation.Services.Implementations;
 
@@ -37,7 +30,6 @@ namespace Presentation
                     options.ClientSecret = googleAuthNSection["ClientSecret"];
                 });
 
-            //services.RegisterServices(Configuration);
             services.AddTransient<IDeveloperHttpService, DeveloperFakeService>();
             services.AddTransient<IMobileAppHttpService, MobileAppFakeService>();
         }
