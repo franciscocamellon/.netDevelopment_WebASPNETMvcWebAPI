@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Model.Interfaces.Services;
+using Domain.Model.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.WebApi.Controllers
 {
@@ -16,34 +18,93 @@ namespace Application.WebApi.Controllers
 
         public MobileAppApiController(IMobileAppService mobileAppService)
         {
-            _mobileAppService = mobileAppService;
+           _mobileAppService = mobileAppService;
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<MobileAppModel>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var mobileApps = await _mobileAppService.GetAllAsync(orderAscendant: true);
+
+            return Ok(mobileApps);
         }
 
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<MobileAppModel>> Get(Guid id)
         {
-            return "value";
+            if (id == Guid.Empty)
+            {
+                return BadRequest();
+            }
+
+            var mobileAppModel = await _mobileAppService.GetByIdAsync(id);
+
+            if (mobileAppModel == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mobileAppModel);
         }
 
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<MobileAppModel>> Post([FromBody] MobileAppModel mobileAppModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(mobileAppModel);
+            }
+            
+            var mobileAppCreated = await _mobileAppService.CreateAsync(mobileAppModel);
+
+            return Ok(mobileAppCreated);
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult<MobileAppModel>> Put(Guid id, [FromBody] MobileAppModel mobileAppModel)
         {
+            if (id != mobileAppModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(mobileAppModel);
+            }
+            
+            try
+            {
+                var editedMobileApp = await _mobileAppService.EditAsync(mobileAppModel);
+
+                return Ok(editedMobileApp);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(409);
+            }
+            return Ok();
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest();
+            }
+
+            await _mobileAppService.DeleteAsync(id);
+
+            return Ok();
+        }
+
+        [HttpGet("IsUnusedName/{appName}/{id:guid}")]
+        public async Task<IActionResult> IsUnusedName(string appName, Guid id)
+        {
+            var isUsed = await _mobileAppService.IsUnusedNameAsync(appName, id);
+
+            return Ok(isUsed);
         }
     }
 }

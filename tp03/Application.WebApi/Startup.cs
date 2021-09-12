@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Crosscutting.IoC;
+using Newtonsoft.Json;
 
 namespace Application.WebApi
 {
@@ -28,7 +29,11 @@ namespace Application.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddNewtonsoftJson(x => 
+                    x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Application.WebApi", Version = "v1" });

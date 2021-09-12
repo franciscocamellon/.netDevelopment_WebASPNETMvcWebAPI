@@ -30,8 +30,8 @@ namespace Presentation
                     options.ClientSecret = googleAuthNSection["ClientSecret"];
                 });
 
-            services.AddTransient<IDeveloperHttpService, DeveloperFakeService>();
-            services.AddTransient<IMobileAppHttpService, MobileAppFakeService>();
+            services.AddTransient<IDeveloperHttpService, DeveloperHttpService>();
+            services.AddTransient<IMobileAppHttpService, MobileAppHttpService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

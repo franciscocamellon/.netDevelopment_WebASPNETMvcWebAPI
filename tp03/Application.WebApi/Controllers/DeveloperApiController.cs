@@ -62,7 +62,7 @@ namespace Application.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<DeveloperModel>>  Put(Guid id, [FromBody] DeveloperModel developerModel)
+        public async Task<ActionResult<DeveloperModel>> Put(Guid id, [FromBody] DeveloperModel developerModel)
         {
             if (id != developerModel.Id)
             {
@@ -76,7 +76,9 @@ namespace Application.WebApi.Controllers
             
             try
             {
-                await _developerService.EditAsync(developerModel);
+                var editedDeveloperMode = await _developerService.EditAsync(developerModel);
+
+                return Ok(editedDeveloperMode);
             }
             catch (DbUpdateConcurrencyException)
             {
