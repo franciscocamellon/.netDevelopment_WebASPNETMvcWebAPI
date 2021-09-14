@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Presentation.Services.Implementations
@@ -65,8 +64,7 @@ namespace Presentation.Services.Implementations
             mobileAppViewModel.Id = Guid.NewGuid();
 
             MobileApps.Add(mobileAppViewModel);
-
-            //TODO: auto-increment Id e atualizar para o retorno
+            
             return mobileAppViewModel;
         }
 
