@@ -21,10 +21,12 @@ namespace Application.WebApi.Controllers
            _mobileAppService = mobileAppService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<MobileAppModel>>> Get()
+        [HttpGet("{orderAscendant:bool}/{search?}")]
+        public async Task<ActionResult<IEnumerable<MobileAppModel>>> Get(
+            bool orderAscendant,
+            string search)
         {
-            var mobileApps = await _mobileAppService.GetAllAsync(orderAscendant: true);
+            var mobileApps = await _mobileAppService.GetAllAsync(orderAscendant, search);
 
             return Ok(mobileApps);
         }

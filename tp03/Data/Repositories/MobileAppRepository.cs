@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Data.Data;
@@ -27,10 +28,13 @@ namespace Data.Repositories
 
             if (string.IsNullOrWhiteSpace(search))
             {
-                return await mobileApps.ToListAsync();
+                return await mobileApps
+                    .Include(x => x.Developer)
+                    .ToListAsync();
             }
 
             return await mobileApps
+                .Include(x => x.Developer)
                 .Where(x => x.AppName.Contains(search))
                 .ToListAsync();
         }

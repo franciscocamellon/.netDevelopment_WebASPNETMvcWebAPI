@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,8 +31,13 @@ namespace Presentation
                     options.ClientSecret = googleAuthNSection["ClientSecret"];
                 });
 
-            services.AddTransient<IDeveloperHttpService, DeveloperHttpService>();
-            services.AddTransient<IMobileAppHttpService, MobileAppHttpService>();
+            var developerApiAddress = Configuration.GetValue<string>("ApiAddresses:Developer");
+            var mobileAppApiAddress = Configuration.GetValue<string>("ApiAddresses:MobileApp");
+
+            services.AddHttpClient<IDeveloperHttpService, DeveloperHttpService>(x => 
+                x.BaseAddress = new Uri(developerApiAddress));
+            services.AddHttpClient<IMobileAppHttpService, MobileAppHttpService>(x => 
+                x.BaseAddress = new Uri(mobileAppApiAddress));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

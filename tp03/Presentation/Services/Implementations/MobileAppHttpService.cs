@@ -18,15 +18,14 @@ namespace Presentation.Services.Implementations
             PropertyNameCaseInsensitive = true
         };
 
-        public MobileAppHttpService()
+        public MobileAppHttpService(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://localhost:44350/");
+            _httpClient = httpClient;
         }
         public async Task<IEnumerable<MobileAppViewModel>> GetAllAsync(bool orderAscendant, string search = null)
         {
             var mobileApps = await _httpClient
-                .GetFromJsonAsync<IEnumerable<MobileAppViewModel>>("/api/v1/MobileAppApi/");
+                .GetFromJsonAsync<IEnumerable<MobileAppViewModel>>($"{orderAscendant}/{search}");
 
             return mobileApps;
         }
@@ -34,7 +33,7 @@ namespace Presentation.Services.Implementations
         public async Task<MobileAppViewModel> GetByIdAsync(Guid id)
         {
             var mobileApp = await _httpClient
-                .GetFromJsonAsync<MobileAppViewModel>($"/api/v1/MobileAppApi/{id}");
+                .GetFromJsonAsync<MobileAppViewModel>($"{id}");
 
             return mobileApp;
         }
@@ -42,11 +41,11 @@ namespace Presentation.Services.Implementations
         public async Task<MobileAppViewModel> CreateAsync(MobileAppViewModel mobileAppViewModel)
         {
             var httpResponseMessage = await _httpClient
-                .PostAsJsonAsync("/api/v1/MobileAppApi", mobileAppViewModel);
+                .PostAsJsonAsync(string.Empty, mobileAppViewModel);
 
             httpResponseMessage.EnsureSuccessStatusCode();
 
-            var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+            await using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
             var createdMobileApp = await JsonSerializer
                 .DeserializeAsync<MobileAppViewModel>(contentStream, JsonSerializerOptions);
@@ -57,11 +56,11 @@ namespace Presentation.Services.Implementations
         public async Task<MobileAppViewModel> EditAsync(MobileAppViewModel mobileAppViewModel)
         {
             var httpResponseMessage = await _httpClient
-                .PutAsJsonAsync($"/api/v1/MobileAppApi/{mobileAppViewModel.Id}", mobileAppViewModel);
+                .PutAsJsonAsync($"{mobileAppViewModel.Id}", mobileAppViewModel);
 
             httpResponseMessage.EnsureSuccessStatusCode();
 
-            var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+            await using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
             var editedMobileApp = await JsonSerializer
                 .DeserializeAsync<MobileAppViewModel>(contentStream, JsonSerializerOptions);
@@ -72,7 +71,7 @@ namespace Presentation.Services.Implementations
         public async Task DeleteAsync(Guid id)
         {
             var httpResponseMessage = await _httpClient
-                .DeleteAsync($"/api/v1/MobileAppApi/{id}");
+                .DeleteAsync($"{id}");
 
             httpResponseMessage.EnsureSuccessStatusCode();
         }
@@ -80,7 +79,7 @@ namespace Presentation.Services.Implementations
         public async Task<bool> IsUnusedNameAsync(string appName, Guid id)
         {
             var isUsed = await _httpClient
-                .GetFromJsonAsync<bool>($"/api/v1/MobileAppApi/IsUnusedName/{appName}/{id}");
+                .GetFromJsonAsync<bool>($"IsUnusedName/{appName}/{id}");
 
             return isUsed;
         }

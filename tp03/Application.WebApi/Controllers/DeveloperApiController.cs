@@ -22,15 +22,17 @@ namespace Application.WebApi.Controllers
            _developerService = developerService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<DeveloperModel>>> Get()
+        [HttpGet("{orderAscendant:bool}/{search?}")]
+        public async Task<ActionResult<IEnumerable<DeveloperModel>>> Get(
+            bool orderAscendant,
+            string search)
         {
-            var developers = await _developerService.GetAllAsync(orderAscendant: true);
+            var developers = await _developerService.GetAllAsync(orderAscendant, search);
 
             return Ok(developers);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<ActionResult<DeveloperModel>> Get(Guid id)
         {
             if (id == Guid.Empty)
@@ -61,7 +63,7 @@ namespace Application.WebApi.Controllers
             return Ok(developerCreated);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public async Task<ActionResult<DeveloperModel>> Put(Guid id, [FromBody] DeveloperModel developerModel)
         {
             if (id != developerModel.Id)
@@ -87,7 +89,7 @@ namespace Application.WebApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         public async Task<ActionResult> Delete(Guid id)
         {
             if (id == Guid.Empty)

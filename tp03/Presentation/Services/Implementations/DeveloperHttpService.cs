@@ -20,15 +20,14 @@ namespace Presentation.Services.Implementations
             PropertyNameCaseInsensitive = true
         };
 
-        public DeveloperHttpService()
+        public DeveloperHttpService(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://localhost:44350/");
+            _httpClient = httpClient;
         }
         public async Task<IEnumerable<DeveloperViewModel>> GetAllAsync(bool orderAscendant, string search = null)
         {
             var developers = await _httpClient
-                .GetFromJsonAsync<IEnumerable<DeveloperViewModel>>("/api/v1/DeveloperApi/");
+                .GetFromJsonAsync<IEnumerable<DeveloperViewModel>>($"{orderAscendant}/{search}");
 
             return developers;
         }
@@ -36,7 +35,7 @@ namespace Presentation.Services.Implementations
         public async Task<DeveloperViewModel> GetByIdAsync(Guid id)
         {
             var developer = await _httpClient
-                .GetFromJsonAsync<DeveloperViewModel>($"/api/v1/DeveloperApi/{id}");
+                .GetFromJsonAsync<DeveloperViewModel>($"{id}");
 
             return developer;
         }
@@ -44,11 +43,11 @@ namespace Presentation.Services.Implementations
         public async Task<DeveloperViewModel> CreateAsync(DeveloperViewModel developerViewModel)
         {
             var httpResponseMessage = await _httpClient
-                .PostAsJsonAsync("/api/v1/DeveloperApi", developerViewModel);
+                .PostAsJsonAsync(string.Empty, developerViewModel);
 
             httpResponseMessage.EnsureSuccessStatusCode();
 
-            var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+            await using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
             var createdDeveloper = await JsonSerializer
                 .DeserializeAsync<DeveloperViewModel>(contentStream, JsonSerializerOptions);
@@ -59,11 +58,11 @@ namespace Presentation.Services.Implementations
         public async Task<DeveloperViewModel> EditAsync(DeveloperViewModel developerViewModel)
         {
             var httpResponseMessage = await _httpClient
-                .PutAsJsonAsync($"/api/v1/DeveloperApi/{developerViewModel.Id}", developerViewModel);
+                .PutAsJsonAsync($"{developerViewModel.Id}", developerViewModel);
 
             httpResponseMessage.EnsureSuccessStatusCode();
 
-            var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+            await using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
             var editedDeveloper = await JsonSerializer
                 .DeserializeAsync<DeveloperViewModel>(contentStream, JsonSerializerOptions);
@@ -74,7 +73,7 @@ namespace Presentation.Services.Implementations
         public async Task DeleteAsync(Guid id)
         {
             var httpResponseMessage = await _httpClient
-                .DeleteAsync($"/api/v1/DeveloperApi/{id}");
+                .DeleteAsync($"{id}");
 
             httpResponseMessage.EnsureSuccessStatusCode();
         }

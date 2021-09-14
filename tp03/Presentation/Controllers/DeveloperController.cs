@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.Models;
@@ -7,6 +8,7 @@ using Presentation.Services;
 
 namespace Presentation.Controllers
 {
+    [Authorize]
     public class DeveloperController : Controller
     {
         private readonly IDeveloperHttpService _developerHttpService;

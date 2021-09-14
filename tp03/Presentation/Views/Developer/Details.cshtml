@@ -58,9 +58,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.MobileApps.First().ModificationDate)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MobileApps.First().Developer)
-            </th>
             <th></th>
         </tr>
         </thead>
@@ -78,9 +75,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ModificationDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Developer.Id)
                 </td>
                 <td>
                     <a asp-controller="MobileApp" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

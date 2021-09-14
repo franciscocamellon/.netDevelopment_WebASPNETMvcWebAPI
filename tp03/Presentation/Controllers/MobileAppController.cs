@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Presentation.Services;
 
 namespace Presentation.Controllers
 {
+    [Authorize]
     public class MobileAppController : Controller
     {
         private readonly IMobileAppHttpService _mobileAppHttpService;
