@@ -24,6 +24,8 @@ namespace Presentation.Models
         [Display(Name = "Apps publicados")]
         public int? PublishedApps { get; set; }
 
+        public string FullName => $"{FirstName} {LastName}";
+
         public List<MobileAppViewModel> MobileApps { get; set; }
     }
 }

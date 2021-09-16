@@ -91,7 +91,7 @@ namespace Presentation.Controllers
             ViewBag.Developers = new SelectList(
                 developers,
                 nameof(DeveloperViewModel.Id),
-                nameof(DeveloperViewModel.FirstName),
+                nameof(DeveloperViewModel.FullName),
                 developerId);
         }
 
